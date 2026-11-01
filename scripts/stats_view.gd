@@ -42,7 +42,7 @@ func _refresh() -> void:
 
 	var badges_title := Label.new()
 	badges_title.text = "🎖️ Rozetler"
-	badges_title.theme_type_variation = &"HeadingLabel"
+	badges_title.theme_type_variation = &"SeaLabel"
 	badges_title.add_theme_font_size_override("font_size", 28)
 	_list.add_child(badges_title)
 	for badge: Dictionary in BADGES:

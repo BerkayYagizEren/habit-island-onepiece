@@ -52,7 +52,7 @@ theme_override_constants/separation = 12
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
-theme_type_variation = &"HeadingLabel"
+theme_type_variation = &"SeaLabel"
 text = "Henüz alışkanlık yok.
 İlk alışkanlığını ekleyerek başla!"
 horizontal_alignment = 1
@@ -64,8 +64,6 @@ custom_minimum_size = Vector2(280, 104)
 layout_mode = 2
 focus_mode = 0
 script = ExtResource("4_doodle_button")
-fill_color = Color(1, 0.75, 0.15, 1)
-caption_color = Color(0.25, 0.12, 0.02, 1)
 font_size = 40
 
 [node name="AddButton" type="Button" parent="Margin/Column"]
@@ -73,7 +71,7 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
 focus_mode = 0
-theme_type_variation = &"SkyButton"
+theme_type_variation = &"GoldButton"
 theme_override_font_sizes/font_size = 26
 text = "➕ Yeni Alışkanlık Ekle"
 

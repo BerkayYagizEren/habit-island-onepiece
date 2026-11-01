@@ -181,7 +181,7 @@ func _test_focus(main: Control) -> void:
 	_check(timer.get_node("%StatusLabel").text == "Luffy is locked in. Training his Haki on Rusukaina!", "Haki alt yazısı")
 	_check(timer.get_node("%FocusScene")._locked_in, "Haki halkaları açılır")
 	var stop: BaseButton = timer.get_node("%StopButton")
-	_check(stop.visible and stop.caption == "STOP" and stop.fill_color == Color("#ef4444"), "kırmızı STOP")
+	_check(stop.visible and stop.caption == "STOP" and stop.fill_color == Color("#dc2626"), "kırmızı STOP")
 	_check(timer.get_node("%TimeLabel").get_theme_font_size("font_size") >= 100, "büyük sayaç")
 	var status: Label = timer.get_node("%StatusLabel")
 	_check(status.get_global_rect().end.x <= root.size.x and status.get_line_count() >= 1, "alt yazı ekrana sığar")

@@ -22,7 +22,8 @@ const POP_SECONDS := 0.14
 	set(value):
 		caption = value
 		queue_redraw()
-@export var fill_color := Color("#ef4444")
+@export var fill_color := Color("#dc2626")
+@export var rim_color := Color("#991b1b")
 @export var caption_color := Color.WHITE
 @export var font_size := 48
 @export_range(-0.2, 0.2) var tilt := -0.015
@@ -48,7 +49,7 @@ func _draw() -> void:
 	var body := DOODLE.wobbly_rect(Rect2(rect.position + offset, rect.size), WOBBLE, stroke_seed)
 	if offset == Vector2.ZERO:
 		draw_set_transform(size / 2.0 + SHADOW_OFFSET, tilt, Vector2.ONE)
-		draw_colored_polygon(body, SHADOW_COLOR)
+		draw_colored_polygon(body, SHADOW_COLOR if disabled else rim_color)
 		draw_set_transform(size / 2.0, tilt, Vector2.ONE)
 	draw_colored_polygon(body, fill)
 	var shine := Rect2(rect.position + offset + Vector2(14, 8), Vector2(rect.size.x - 28, rect.size.y * 0.28))

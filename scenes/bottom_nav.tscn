@@ -5,7 +5,7 @@
 [sub_resource type="ButtonGroup" id="ButtonGroup_tabs"]
 
 [node name="BottomNav" type="PanelContainer"]
-theme_type_variation = &"FloatingPill"
+theme_type_variation = &"DeckPill"
 script = ExtResource("1_script")
 
 [node name="Tabs" type="HBoxContainer" parent="."]
