@@ -10,7 +10,7 @@ const FULL_CREW: Array[String] = ["nami", "usopp", "robin", "franky", "brook", "
 const REMOVED_ITEMS := {"monkey_knuckles": 100, "monkey_tails": 90, "monkey_shadow": 140, "monkey_super": 250}
 const RECRUITED_TEXT := "Tayfada ✓"
 const DECOR_ICONS := {"meat": "🍖", "jolly_roger": "🏴‍☠", "gomu_fruit": "🍈", "chest": "📦"}
-const BUBBLES := {"monkey": "🍖!", "zoro": "⚔!", "sanji": "🔥!", "chopper": "🦌!", "gear5": "⚡!", "nami": "🍊!", "usopp": "🎯!", "robin": "🌸!", "franky": "⭐!", "brook": "🎵!", "jinbe": "🌊!"}
+const BUBBLES := {"monkey": "🍌!", "zoro": "⚔!", "sanji": "🔥!", "chopper": "🦌!", "gear5": "⚡!", "nami": "🍊!", "usopp": "🎯!", "robin": "🌸!", "franky": "⭐!", "brook": "🎵!", "jinbe": "🌊!"}
 const FLAG_SEQUENCE := "🏴‍☠"
 
 var _failures := 0
@@ -107,7 +107,7 @@ func _test_luffy(main: Control) -> void:
 	await _wait(0.1)
 	_check(luffy._hop < 0.0, "Gomu Gomu: yukarı zıplar")
 	_check(luffy._action > 0.0, "Gomu Gomu: kollar uzar")
-	_check(is_instance_valid(item._bubble) and item._bubble.get_child(1).text == "🍖!", "Korsan Eti balonu")
+	_check(is_instance_valid(item._bubble) and item._bubble.get_child(1).text == "🍌!", "Muz balonu")
 	await _wait(0.5)
 	_check(is_zero_approx(luffy._action), "kollar geri toplanır")
 	await _wait(1.3)
@@ -276,7 +276,7 @@ func _test_daily(main: Control) -> void:
 	var card: Control = view.get_node("Margin/Column/DailyQuestCard")
 	var title: Label = card.get_node("Column/Heading/Title")
 	_check(title.text == "Günün Korsan Görevi: Grand Line'da zafer kazan!", "görev başlığı")
-	_check(card.get_node("%RewardLabel").text == "+20 🍖", "görev ödülü")
+	_check(card.get_node("%RewardLabel").text == "+20 🍌", "görev ödülü")
 	_check(card.get_global_rect().end.x <= root.size.x, "görev kartı ekrana sığar")
 	var button: BaseButton = view.get_node("%CheckInButton")
 	_dm.data.last_check_in_date = ""

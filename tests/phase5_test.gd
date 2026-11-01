@@ -206,7 +206,7 @@ func _test_home_screen(main: Control) -> void:
 	var card: Control = view.get_node("Margin/Column/DailyQuestCard")
 	_check("Today's Progress" in _all_text(progress), "şerit başlığı")
 	_check("Günün Korsan Görevi: Grand Line'da zafer kazan!" in _all_text(card), "görev başlığı")
-	_check(card.get_node("%RewardLabel").text == "+20 🍖", "ödül etiketi")
+	_check(card.get_node("%RewardLabel").text == "+20 🍌", "ödül etiketi")
 	_check(card.get_node("%QuestLabel").text == _dm.data.daily_quest.text, "görev metni")
 	var countdown: String = card.get_node("%CountdownLabel").text
 	_check(countdown.begins_with("⏳ ") and countdown.ends_with("m") and "h " in countdown, "geri sayım (%s)" % countdown)

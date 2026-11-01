@@ -39,7 +39,7 @@ func _on_countdown_tick() -> void:
 func _refresh() -> void:
 	var quest: Dictionary = DataManager.data.daily_quest
 	_quest_label.text = quest.text
-	_reward_label.text = "+%d 🍖" % quest.reward
+	_reward_label.text = "+%d 🍌" % quest.reward
 	_change_button.disabled = quest.completed
 	_complete_button.disabled = quest.completed
 	_complete_button.text = "✅ Tamamlandı" if quest.completed else "Tamamla"

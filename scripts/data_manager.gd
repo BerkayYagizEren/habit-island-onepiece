@@ -42,7 +42,7 @@ const ISLAND_EXPANSION_COSTS: Dictionary[int, int] = {2: 200, 3: 450, 4: 800}
 const ISLAND_ITEMS := {
 	"palm": {"icon": "🌴", "name": "Palmiye Ağacı", "price": 20},
 	"flower": {"icon": "🌺", "name": "Tropik Çiçek", "price": 15},
-	"monkey": {"icon": "👒", "name": "Monkey D. Luffy", "price": 80, "variant": "sonic", "bubble": "🍖!"},
+	"monkey": {"icon": "👒", "name": "Monkey D. Luffy", "price": 80, "variant": "sonic", "bubble": "🍌!"},
 	"zoro": {"icon": "⚔", "name": "Roronoa Zoro", "price": 100, "variant": "zoro", "bubble": "⚔!"},
 	"sanji": {"icon": "🌀", "name": "Sanji", "price": 100, "variant": "sanji", "bubble": "🔥!"},
 	"chopper": {"icon": "🦌", "name": "Tony Tony Chopper", "price": 90, "variant": "chopper", "bubble": "🦌!"},
