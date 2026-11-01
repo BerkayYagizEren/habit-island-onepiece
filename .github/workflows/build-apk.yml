@@ -1,8 +1,8 @@
-name: Build Android APK
+name: Build Android APK (One Piece Edition)
 
 on:
   push:
-    branches: [ main, theme-onepiece ]
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -57,40 +57,26 @@ jobs:
       - name: Export Android Debug APK
         run: |
           mkdir -p build/android
-          godot --headless --path . --export-debug "Android" build/android/HabitIsland.apk
+          godot --headless --path . --export-debug "Android" build/android/HabitIsland-OnePiece.apk
 
       - name: Upload APK as Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: HabitIsland-Android-APK
-          path: build/android/HabitIsland.apk
+          name: HabitIsland-OnePiece-APK
+          path: build/android/HabitIsland-OnePiece.apk
           retention-days: 14
 
-      - name: Create GitHub Release with APK (Main)
+      - name: Create GitHub Release with APK
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main'
         with:
-          tag_name: v1.0.0-apk
-          name: "Habit Island v1.0.0 (Android APK)"
-          body: |
-            🏝️ **Habit Island Android APK Hazır!**
-            
-            Telefonunuza indirmek için aşağıdaki `HabitIsland.apk` dosyasına dokunun ve kurun.
-          files: build/android/HabitIsland.apk
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Create GitHub Release with APK (One Piece Edition)
-        uses: softprops/action-gh-release@v2
-        if: github.ref == 'refs/heads/theme-onepiece'
-        with:
-          tag_name: v1.0.0-onepiece-apk
+          tag_name: v1.0.0-onepiece
           name: "Habit Island: One Piece Edition 🏴‍☠️ (Android APK)"
           body: |
             🏴‍☠️ **Habit Island: One Piece Edition Hazır!**
             
             Luffy, Zoro, Sanji, Chopper ve Going Merry ile Grand Line macerası!
-            Telefonunuza indirmek için aşağıdaki `HabitIsland.apk` dosyasına dokunun ve kurun.
-          files: build/android/HabitIsland.apk
+            Telefonunuza indirmek için aşağıdaki `HabitIsland-OnePiece.apk` dosyasına dokunun ve kurun.
+          files: build/android/HabitIsland-OnePiece.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
