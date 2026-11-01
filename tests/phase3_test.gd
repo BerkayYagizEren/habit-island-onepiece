@@ -126,11 +126,12 @@ func _test_shop(main: Control) -> void:
 	_check(modal.visible, "mağaza butonu açar")
 
 	_check(_dm.data.bananas == 50, "başlangıç 50 muz")
-	_check(modal._buy_buttons.size() == 24, "24 ürün")
+	_check(modal._buy_buttons.size() == 20, "20 ürün")
 	for type: String in ["palm", "campfire", "tent", "flower"]:
 		_check(not modal._buy_buttons[type].disabled, "%s alınabilir" % type)
-	for type: String in ["chest", "ship", "monkey", "monkey_knuckles", "monkey_tails", "monkey_shadow", "monkey_super"]:
+	for type: String in ["chest", "ship", "zoro", "sanji", "robin"]:
 		_check(modal._buy_buttons[type].disabled and modal._buy_buttons[type].text == "Yetersiz Muz", "%s yetersiz" % type)
+	_check(modal._buy_buttons["monkey"].disabled and modal._buy_buttons["monkey"].text == "Tayfada ✓", "başlangıç Luffy'si tayfada")
 
 	# Açık modal alttaki sekmeyi engellemeli.
 	var nav_point: Vector2 = main.get_node("%BottomNav").get_node("%HabitsButton").get_global_rect().get_center()
@@ -175,7 +176,7 @@ func _test_shop(main: Control) -> void:
 	_dm.data.island_items = saved_items
 
 	# Tüm kataloğun fiyatları.
-	var prices := {"palm": 20, "campfire": 30, "tent": 40, "flower": 15, "chest": 60, "ship": 100, "monkey": 80, "monkey_knuckles": 100, "monkey_tails": 90, "monkey_shadow": 140, "monkey_super": 250}
+	var prices := {"palm": 20, "campfire": 30, "tent": 40, "flower": 15, "chest": 60, "ship": 100, "monkey": 80, "zoro": 100, "sanji": 100, "robin": 110}
 	for type: String in prices:
 		_check(_dm.ISLAND_ITEMS[type].price == prices[type], "%s fiyatı" % type)
 

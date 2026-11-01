@@ -4,8 +4,9 @@ extends SceneTree
 
 const MAIN_SCENE := "res://scenes/main.tscn"
 const SONIC_MONKEY := preload("res://scripts/sonic_monkey.gd")
-const MONKEY_PRICES := {"monkey": 80, "monkey_knuckles": 100, "monkey_tails": 90, "monkey_shadow": 140, "monkey_super": 250}
-const MONKEY_VARIANTS := {"monkey": "sonic", "monkey_knuckles": "knuckles", "monkey_tails": "tails", "monkey_shadow": "shadow", "monkey_super": "super"}
+const CREW_MONKEY := preload("res://scripts/crew_monkey.gd")
+const MONKEY_PRICES := {"monkey": 80, "zoro": 100, "sanji": 100, "chopper": 90, "nami": 90, "usopp": 85, "robin": 110, "franky": 115, "brook": 95, "jinbe": 120, "gear5": 250}
+const ISLAND_CREW: Array[String] = ["monkey", "zoro", "sanji", "nami", "gear5"]
 
 var _failures := 0
 var _checks := 0
@@ -105,7 +106,7 @@ func _test_sanitize() -> void:
 func _test_variants_in_shop(modal: CanvasLayer) -> void:
 	for type: String in MONKEY_PRICES:
 		_check(_dm.ISLAND_ITEMS[type].price == MONKEY_PRICES[type], "%s fiyatı" % type)
-		_check(_dm.ISLAND_ITEMS[type].variant == MONKEY_VARIANTS[type], "%s varyasyonu" % type)
+		_check(_dm.ISLAND_ITEMS[type].variant == _variant_of(type), "%s varyasyonu" % type)
 		_check(modal._buy_buttons.has(type), "%s mağazada" % type)
 
 	var monkeys: Array[Node2D] = []
@@ -113,7 +114,7 @@ func _test_variants_in_shop(modal: CanvasLayer) -> void:
 	var shown := {}
 	for monkey: Node2D in monkeys:
 		shown[monkey.variant] = monkey
-	_check(monkeys.size() == 5 and shown.size() == 5, "mağazada her varyasyon bir kez")
+	_check(monkeys.size() == MONKEY_PRICES.size() and shown.size() == MONKEY_PRICES.size(), "mağazada her varyasyon bir kez")
 
 	modal.open()
 	await _frames(2)
@@ -140,7 +141,7 @@ func _test_variants_in_shop(modal: CanvasLayer) -> void:
 
 
 func _test_variants_on_island(island: Control, modal: CanvasLayer) -> void:
-	for type: String in MONKEY_PRICES:
+	for type: String in ISLAND_CREW:
 		if type != "monkey":
 			_dm.data.bananas = MONKEY_PRICES[type]
 			modal._buy(type)
@@ -150,12 +151,12 @@ func _test_variants_on_island(island: Control, modal: CanvasLayer) -> void:
 
 	var looks := {}
 	var quills := {}
-	for type: String in MONKEY_PRICES:
+	for type: String in ISLAND_CREW:
 		var item := _item_of_type(island, type)
 		_check(item != null, "%s adada" % type)
 		_check(item.get_node("%Emoji").text.is_empty(), "%s emoji kullanmaz" % type)
 		var monkey: Node2D = item._monkey
-		_check(monkey.variant == MONKEY_VARIANTS[type], "%s doğru çizilir" % type)
+		_check(monkey.variant == _variant_of(type), "%s doğru çizilir" % type)
 		looks[monkey._look.fur] = true
 		quills[monkey._look.quills] = true
 
@@ -168,8 +169,8 @@ func _test_variants_on_island(island: Control, modal: CanvasLayer) -> void:
 		monkey.play_bounce()
 		await _wait(0.1)
 		_check(monkey._hop < 0.0, "%s zıplar" % type)
-	_check(looks.size() == 5, "her varyasyonun kürkü farklı")
-	_check(quills.size() == 5, "her varyasyonun dikenleri farklı")
+	_check(looks.size() == ISLAND_CREW.size(), "her varyasyonun kürkü farklı")
+	_check(quills.size() == ISLAND_CREW.size(), "her varyasyonun dikenleri farklı")
 
 	var unknown: Node2D = SONIC_MONKEY.new("yok-boyle-biri")
 	_check(unknown.variant == SONIC_MONKEY.DEFAULT_VARIANT, "bilinmeyen varyasyon varsayılana döner")
@@ -178,8 +179,6 @@ func _test_variants_on_island(island: Control, modal: CanvasLayer) -> void:
 	_check(plain.variant == "sonic", "varsayılan varyasyon sonic")
 	plain.free()
 
-	var palette: Dictionary = SONIC_MONKEY.VARIANTS
-	_check(palette.tails.quills != palette.sonic.quills and palette.super.iris == Color("#be123c"), "süper maymunun gözü yakut")
 	await _wait(0.6)
 
 
@@ -199,7 +198,7 @@ func _test_expansion(island: Control, modal: CanvasLayer) -> void:
 	await _frames(1)
 	_check(not modal._expand_button.disabled and modal._expand_button.text == "Genişlet", "muz yetince açılır")
 
-	var item := _item_of_type(island, "monkey_super")
+	var item := _item_of_type(island, "zoro")
 	var start_scale: float = island._island_scale
 	_sm._players["timer_finish"].stop()
 	await _click(modal._expand_button.get_global_rect().get_center())
@@ -253,7 +252,7 @@ func _test_expansion(island: Control, modal: CanvasLayer) -> void:
 	await _release(screen_target)
 	await _wait(0.25)
 	_check(item.position.distance_to(world_target) < 2.0, "zoom altında sürükleme parmağı izler (%s)" % item.position)
-	var entry := _entry_of_type("monkey_super")
+	var entry := _entry_of_type("zoro")
 	_check(Vector2(entry.x, entry.y).distance_to(world_target) < 2.0, "yeni alandaki konum kaydedilir")
 
 
@@ -288,7 +287,7 @@ func _test_reload_level(main: Control) -> void:
 	_check(is_equal_approx(island._island_scale, _dm.get_island_scale()), "yeniden açılışta ada büyük")
 	_check(is_equal_approx(island._view_zoom, island.VIEW_ZOOMS[3]), "yeniden açılışta kamera yerinde")
 	_check(island._foam_ring_progress >= 1.0, "yeniden açılışta animasyon oynamaz")
-	var entry := _entry_of_type("monkey_super")
+	var entry := _entry_of_type("zoro")
 	_check(island._item_nodes[entry.id].position.distance_to(Vector2(entry.x, entry.y)) < 0.01, "yeni alandaki eşya kırpılmaz")
 	root.remove_child(fresh)
 	fresh.free()
@@ -296,10 +295,14 @@ func _test_reload_level(main: Control) -> void:
 
 
 func _collect_monkeys(node: Node, into: Array[Node2D]) -> void:
-	if node.get_script() == SONIC_MONKEY:
+	if node.get_script() == SONIC_MONKEY or node.get_script() == CREW_MONKEY:
 		into.append(node)
 	for child: Node in node.get_children():
 		_collect_monkeys(child, into)
+
+
+func _variant_of(type: String) -> String:
+	return "sonic" if type == "monkey" else type
 
 
 func _entry_of_type(type: String) -> Dictionary:

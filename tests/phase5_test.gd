@@ -4,6 +4,7 @@ extends SceneTree
 
 const MAIN_SCENE := "res://scenes/main.tscn"
 const SONIC_MONKEY := preload("res://scripts/sonic_monkey.gd")
+const CREW_MONKEY := preload("res://scripts/crew_monkey.gd")
 
 var _failures := 0
 var _checks := 0
@@ -358,11 +359,11 @@ func _test_monkeys(main: Control) -> void:
 	_check(Vector2(entry.x, entry.y).distance_to(Vector2(300, 400)) < 1.0, "maymun sürüklenir")
 
 	var modal: CanvasLayer = island.get_node("%ShopModal")
-	_check(_count_monkeys(modal) == 5, "mağazada çizilmiş 5 maymun varyasyonu")
+	_check(_count_monkeys(modal) == 11, "mağazada çizilmiş 11 korsan")
 
 
 func _count_monkeys(node: Node) -> int:
-	var count := 1 if node.get_script() == SONIC_MONKEY else 0
+	var count := 1 if node.get_script() == SONIC_MONKEY or node.get_script() == CREW_MONKEY else 0
 	for child: Node in node.get_children():
 		count += _count_monkeys(child)
 	return count

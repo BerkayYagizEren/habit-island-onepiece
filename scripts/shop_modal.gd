@@ -8,6 +8,7 @@ const MONKEY_ICON_OFFSET := Vector2(32, 44)
 const BUY_BUTTON_SIZE := Vector2(190, 72)
 const BUY_TEXT := "Satın Al"
 const INSUFFICIENT_TEXT := "Yetersiz Muz"
+const RECRUITED_TEXT := "Tayfada ✓"
 const EXPAND_TEXT := "Genişlet"
 const EXPAND_TITLE := "🏝️ Ada Genişletme"
 const EXPAND_LEVEL_TEXT := "Ada Seviyesi: %d/%d"
@@ -33,7 +34,8 @@ func _ready() -> void:
 		_list.add_child(_create_card(item_type, DataManager.ISLAND_ITEMS[item_type], style))
 	# Sayaç mağaza açıkken bitip muz kazandırabilir.
 	DataManager.bananas_changed.connect(_refresh_affordability)
-	DataManager.island_updated.connect(_refresh_expansion)
+	# Başlangıç hediyeleri ve satın alınan korsanlar buradan yansır.
+	DataManager.island_updated.connect(_on_island_updated)
 	_refresh_affordability(DataManager.data.bananas)
 
 
@@ -158,10 +160,23 @@ func _create_monkey_icon(variant: String) -> Control:
 func _refresh_affordability(bananas: int) -> void:
 	_balance_label.text = "🍌 %d" % bananas
 	for item_type: String in _buy_buttons:
+		if _is_recruited(item_type):
+			_buy_buttons[item_type].disabled = true
+			_buy_buttons[item_type].text = RECRUITED_TEXT
+			continue
 		var can_afford: bool = bananas >= DataManager.ISLAND_ITEMS[item_type].price
 		_buy_buttons[item_type].disabled = not can_afford
 		_buy_buttons[item_type].text = BUY_TEXT if can_afford else INSUFFICIENT_TEXT
 	_refresh_expansion()
+
+
+# Korsanlar benzersizdir; dekorlar sınırsız alınır.
+func _is_recruited(item_type: String) -> bool:
+	return DataManager.ISLAND_ITEMS[item_type].has("variant") and DataManager.has_island_item(item_type)
+
+
+func _on_island_updated() -> void:
+	_refresh_affordability(DataManager.data.bananas)
 
 
 func _refresh_expansion() -> void:
@@ -177,6 +192,8 @@ func _refresh_expansion() -> void:
 
 
 func _buy(item_type: String) -> void:
+	if _is_recruited(item_type):
+		return
 	if not DataManager.spend_bananas(DataManager.ISLAND_ITEMS[item_type].price):
 		return
 	SoundManager.play_banana()

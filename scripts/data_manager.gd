@@ -60,11 +60,9 @@ const ISLAND_ITEMS := {
 	"tent": {"icon": "⛺", "name": "Macera Çadırı", "price": 40},
 	"chest": {"icon": "📦", "name": "Hazine Sandığı", "price": 60},
 	"ship": {"icon": "⛵", "name": "Korsan Gemisi", "price": 100},
-	"monkey_knuckles": {"icon": "🐵", "name": "Kızıl Savaşçı", "price": 100, "variant": "knuckles"},
-	"monkey_tails": {"icon": "🐵", "name": "İki Kuyruklu Mucid", "price": 90, "variant": "tails"},
-	"monkey_shadow": {"icon": "🐵", "name": "Karanlık Gölge", "price": 140, "variant": "shadow"},
-	"monkey_super": {"icon": "🐵", "name": "Altın Süper Maymun", "price": 250, "variant": "super"},
 }
+# Katalogdan kaldırılan eşyalar eski kayıtlarda ❓ olarak kalmasın; parası iade edilir.
+const REMOVED_ITEM_REFUNDS := {"monkey_knuckles": 100, "monkey_tails": 90, "monkey_shadow": 140, "monkey_super": 250}
 const FREE_SPOT_ATTEMPTS := 40
 const FREE_SPOT_MIN_RADIUS := 60.0
 const FREE_SPOT_MAX_RADIUS := 300.0
@@ -262,6 +260,10 @@ func place_island_item(type: String, pos: Vector2) -> String:
 	save_data()
 	island_updated.emit()
 	return item_id
+
+
+func has_island_item(item_type: String) -> bool:
+	return data.island_items.any(func(item: Dictionary) -> bool: return item.type == item_type)
 
 
 func update_item_position(item_id: String, pos: Vector2) -> void:
@@ -533,9 +535,13 @@ func _sanitized(raw: Dictionary) -> Dictionary:
 
 	for item: Variant in _to_array(raw.get("island_items")):
 		if item is Dictionary and item.get("id") is String:
+			var type := str(item.get("type", ""))
+			if REMOVED_ITEM_REFUNDS.has(type):
+				result.bananas += REMOVED_ITEM_REFUNDS[type]
+				continue
 			result.island_items.append({
 				"id": item.id,
-				"type": str(item.get("type", "")),
+				"type": type,
 				"x": _to_float(item.get("x")),
 				"y": _to_float(item.get("y")),
 			})

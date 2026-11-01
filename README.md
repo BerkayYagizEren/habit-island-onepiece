@@ -10,10 +10,9 @@ Alışkanlıklarını tamamladıkça muz ve XP kazandığın, kazandıklarınla 
 - **Günün Küçük Zaferi:** Gece yarısına kadar süren, değiştirilebilir mini görev. Tamamlanınca 20 muz ve 20 XP kazandırır.
 - **CHECK-IN:** Günde bir kez 15 muz ve kutlama sesi.
 - **Öncelikler:** Kırmızı, sarı ve beyaz noktaya dokunarak alışkanlığın önceliğini değiştir.
-- **Ada İnşası:** Mağazadan palmiye, çadır, gemi, maymun gibi eşyalar al ve adanın üzerinde sürükleyerek yerleştir.
+- **Ada İnşası:** Mağazadan palmiye, çadır, gemi gibi dekorları istediğin kadar al ve adanın üzerinde sürükleyerek yerleştir.
 - **Ada Genişletme:** Adayı mağazadan 4. seviyeye kadar büyüt (🍌 200, 450, 800). Her seviye adayı %19 genişletir ve eşyalar için yeni alan açar.
-- **Maymun Varyasyonları:** Klasik Mavi, Kızıl Savaşçı, İki Kuyruklu Mucid, Karanlık Gölge ve Altın Süper Maymun; her biri kendi renkleri, dikenleri ve ayakkabılarıyla.
-- **Hasır Şapka Tayfası:** Luffy, Zoro, Sanji, Chopper, Nami, Usopp, Robin, Franky, Brook ve Jinbe'yi mağazadan al; her biri adada sürüklenir, nefes alır, göz kırpar ve dokununca kendi korsan hareketini yapar.
+- **Hasır Şapka Tayfası:** Luffy adada başlar; Zoro, Sanji, Chopper, Nami, Usopp, Robin, Franky, Brook ve Jinbe'yi mağazadan al. Her korsan benzersizdir, alınınca mağazada "Tayfada ✓" olarak kilitlenir; her biri adada sürüklenir, nefes alır, göz kırpar ve dokununca kendi korsan hareketini yapar.
 - **İstatistikler ve Rozetler:** Seviye ilerlemesi, toplam odak süresi, en iyi seri ve 6 rozet.
 - **Prosedürel Sesler:** Tüm ses efektleri çalışma anında kodla sentezlenir, ses dosyası kullanılmaz. Üst çubuktan kapatılabilir.
 - **Yerel Kayıt:** İlerleme yalnızca cihazda `user://save_data.json` dosyasında tutulur, hiçbir yere gönderilmez.

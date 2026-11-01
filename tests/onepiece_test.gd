@@ -7,7 +7,8 @@ const SONIC_MONKEY := preload("res://scripts/sonic_monkey.gd")
 const CREW_MONKEY := preload("res://scripts/crew_monkey.gd")
 const CREW_PRICES := {"zoro": 100, "sanji": 100, "chopper": 90, "gear5": 250, "nami": 90, "usopp": 85, "robin": 110, "franky": 115, "brook": 95, "jinbe": 120}
 const FULL_CREW: Array[String] = ["nami", "usopp", "robin", "franky", "brook", "jinbe"]
-const LEGACY_VARIANTS: Array[String] = ["knuckles", "tails", "shadow", "super"]
+const REMOVED_ITEMS := {"monkey_knuckles": 100, "monkey_tails": 90, "monkey_shadow": 140, "monkey_super": 250}
+const RECRUITED_TEXT := "Tayfada ✓"
 const DECOR_ICONS := {"meat": "🍖", "jolly_roger": "🏴‍☠", "gomu_fruit": "🍈", "chest": "📦"}
 const BUBBLES := {"monkey": "🍖!", "zoro": "⚔!", "sanji": "🔥!", "chopper": "🦌!", "gear5": "⚡!", "nami": "🍊!", "usopp": "🎯!", "robin": "🌸!", "franky": "⭐!", "brook": "🎵!", "jinbe": "🌊!"}
 const FLAG_SEQUENCE := "🏴‍☠"
@@ -62,12 +63,13 @@ func _test_catalog() -> void:
 		_check(CREW_MONKEY.CREW_VARIANTS.has(type), "%s çizimi var" % type)
 	for type: String in DECOR_ICONS:
 		_check(_dm.ISLAND_ITEMS[type].icon == DECOR_ICONS[type], "%s simgesi" % type)
-	for variant: String in LEGACY_VARIANTS:
-		_check(SONIC_MONKEY.VARIANTS.has(variant), "%s geriye dönük kalır" % variant)
-		_check(_dm.ISLAND_ITEMS.has("monkey_" + variant), "monkey_%s geriye dönük kalır" % variant)
-		var legacy: Node2D = CREW_MONKEY.create(variant)
-		_check(legacy.get_script() == SONIC_MONKEY and legacy.variant == variant, "%s eski çizimle açılır" % variant)
-		legacy.free()
+	for type: String in REMOVED_ITEMS:
+		_check(not _dm.ISLAND_ITEMS.has(type), "%s katalogda yok" % type)
+		var old_save := {"bananas": 10, "island_items": [{"id": "a", "type": type, "x": 1, "y": 1}, {"id": "b", "type": "palm", "x": 2, "y": 2}]}
+		var migrated: Dictionary = _dm._sanitized(old_save)
+		_check(migrated.island_items.size() == 1 and migrated.island_items[0].type == "palm", "%s eski kayıttan silinir" % type)
+		_check(migrated.bananas == 10 + REMOVED_ITEMS[type], "%s parası iade edilir" % type)
+	_check(_dm.has_island_item("monkey") and not _dm.has_island_item("zoro"), "has_island_item adayı kontrol eder")
 	var fallback: Node2D = CREW_MONKEY.new("yok-boyle-biri")
 	_check(CREW_MONKEY.CREW_VARIANTS.has(fallback.variant), "bilinmeyen tayfa üyesi geçerli varyasyona döner")
 	fallback.free()
@@ -79,6 +81,7 @@ func _test_font(main: Control) -> void:
 	for type: String in FULL_CREW:
 		_check(main.EMOJI_FONT.has_char(_dm.ISLAND_ITEMS[type].icon.unicode_at(0)), "%s simgesi gömülü fontta" % type)
 	# ZWJ dizisi tek bir bayrağa birleşmezse korsan bayrağı iki ayrı emoji olarak görünür.
+	_check(main.CHECK_FONT.has_char(RECRUITED_TEXT.unicode_at(RECRUITED_TEXT.length() - 1)), "tayfa işareti gömülü fontta")
 	var flag: float = main.EMOJI_FONT.get_string_size(FLAG_SEQUENCE, HORIZONTAL_ALIGNMENT_LEFT, -1, 48).x
 	var pirate_flag_parts: float = main.EMOJI_FONT.get_string_size("🏴☠", HORIZONTAL_ALIGNMENT_LEFT, -1, 48).x
 	_check(flag > 0.0 and flag < pirate_flag_parts, "korsan bayrağı tek karakter çizilir (%.0f / %.0f)" % [flag, pirate_flag_parts])
@@ -114,11 +117,20 @@ func _test_crew(main: Control) -> void:
 	var island := await _open_island(main)
 	var modal: CanvasLayer = island.get_node("%ShopModal")
 	var hairs := {}
+	for type: String in REMOVED_ITEMS:
+		_check(not modal._buy_buttons.has(type), "%s mağazada yok" % type)
+	_check(modal._buy_buttons["monkey"].disabled and modal._buy_buttons["monkey"].text == RECRUITED_TEXT, "Luffy başta tayfada")
+	_check_no_second_copy(modal, "monkey")
 	for type: String in CREW_PRICES:
 		_check(modal._buy_buttons.has(type), "%s mağazada" % type)
 		_dm.data.bananas = CREW_PRICES[type]
+		_dm.bananas_changed.emit(CREW_PRICES[type])
+		_check(not modal._buy_buttons[type].disabled and modal._buy_buttons[type].text == "Satın Al", "%s alınmadan açık" % type)
 		modal._buy(type)
 		_check(_dm.data.bananas == 0, "%s satın alınır" % type)
+		_check(modal._buy_buttons[type].disabled and modal._buy_buttons[type].text == RECRUITED_TEXT, "%s anında tayfada" % type)
+		_check_no_second_copy(modal, type)
+		_dm.data.bananas = 0
 		await _frames(2)
 		var item := _item_of_type(island, type)
 		_check(item != null and item._monkey.get_script() == CREW_MONKEY, "%s adada çizilir" % type)
@@ -144,6 +156,15 @@ func _test_crew(main: Control) -> void:
 	_check(_item_of_type(island, "gear5")._monkey._look.has("aura"), "Gear 5 aurası")
 	await _wait(0.5)
 	await _test_full_crew(island)
+
+
+func _check_no_second_copy(modal: CanvasLayer, type: String) -> void:
+	var count: int = _dm.data.island_items.size()
+	_dm.data.bananas = 999
+	_dm.bananas_changed.emit(999)
+	_check(modal._buy_buttons[type].disabled and modal._buy_buttons[type].text == RECRUITED_TEXT, "%s muz gelince de kilitli" % type)
+	modal._buy(type)
+	_check(_dm.data.bananas == 999 and _dm.data.island_items.size() == count, "%s ikinci kez alınamaz" % type)
 
 
 func _test_full_crew(island: Control) -> void:
@@ -201,6 +222,14 @@ func _test_decor(main: Control) -> void:
 		await _frames(2)
 		var item := _item_of_type(island, type)
 		_check(item.get_node("%Emoji").text == DECOR_ICONS[type], "%s adada görünür" % type)
+	for type: String in DECOR_ICONS:
+		var count: int = _dm.data.island_items.size()
+		_dm.data.bananas = _dm.ISLAND_ITEMS[type].price
+		_dm.bananas_changed.emit(_dm.data.bananas)
+		_check(not modal._buy_buttons[type].disabled and modal._buy_buttons[type].text == "Satın Al", "%s tekrar alınabilir" % type)
+		modal._buy(type)
+		_check(_dm.data.island_items.size() == count + 1, "%s ikinci kez eklenir" % type)
+		await _frames(2)
 	_check(_item_of_type(island, "jolly_roger").is_processing(), "bayrak dalgalanır")
 	_check(not _item_of_type(island, "meat").is_processing(), "et durur")
 

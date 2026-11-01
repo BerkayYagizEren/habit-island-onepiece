@@ -117,7 +117,7 @@ func _test_emoji_font(main: Control) -> void:
 		for i: int in text.length():
 			var code := text.unicode_at(i)
 			if code >= 0x2300 and code != 0xFE0F:
-				_check(main.EMOJI_FONT.has_char(code), "%s: U+%X gömülü fontta" % [path, code])
+				_check(main.EMOJI_FONT.has_char(code) or main.CHECK_FONT.has_char(code), "%s: U+%X gömülü fontta" % [path, code])
 	_check(main.EMOJI_FONT.has_char(0x1F34C), "gömülü font renkli")
 	var ascent: float = main.EMOJI_FONT.get_ascent(26)
 	_check(ascent > 0.0, "emoji fontu istenen boyuta ölçeklenir (%.1f)" % ascent)

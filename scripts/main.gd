@@ -5,6 +5,8 @@ const DEFAULT_TAB := "habits"
 # emojiler bu yüzden CBDT biçiminde gömülür. Kullanıcının yazdığı diğer emojiler sistem
 # fontuna düşer. Arayüze yeni emoji eklenirse alt küme yeniden üretilmelidir.
 const EMOJI_FONT := preload("res://assets/fonts/NotoColorEmoji-subset.ttf")
+# "✓" emoji değildir, alt kümede yoktur; scripts/tools/gen_check_font.py ile üretilir.
+const CHECK_FONT := preload("res://assets/fonts/CheckMark.ttf")
 
 @onready var _bottom_nav: PanelContainer = %BottomNav
 @onready var _views: Dictionary[String, Control] = {
@@ -16,7 +18,7 @@ const EMOJI_FONT := preload("res://assets/fonts/NotoColorEmoji-subset.ttf")
 
 
 func _enter_tree() -> void:
-	ThemeDB.fallback_font.fallbacks = [EMOJI_FONT]
+	ThemeDB.fallback_font.fallbacks = [EMOJI_FONT, CHECK_FONT]
 
 
 func _ready() -> void:
