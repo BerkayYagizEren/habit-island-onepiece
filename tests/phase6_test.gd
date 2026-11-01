@@ -69,9 +69,10 @@ func _test_monkey(island: Control) -> void:
 	var saved_position := item.position
 	_sm._players["pop"].stop()
 	await _click(item.global_position)
+	# Ses 0,12 saniye sürer; beklemeden bakılır ki yavaş karede bitmiş olmasın.
+	_check(_sm._players["pop"].playing, "dokununca ses çalar")
 	await _wait(0.1)
 	_check(monkey._hop < 0.0, "dokununca maymun zıplar")
-	_check(_sm._players["pop"].playing, "dokununca ses çalar")
 	_check(is_instance_valid(item._bubble) and item._bubble.is_inside_tree(), "dokununca balon çıkar")
 	_check(item.position == saved_position, "dokunuş eşyayı taşımaz")
 	await _wait(1.2)

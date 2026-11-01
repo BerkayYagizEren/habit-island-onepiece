@@ -5,10 +5,11 @@ extends SceneTree
 const MAIN_SCENE := "res://scenes/main.tscn"
 const SONIC_MONKEY := preload("res://scripts/sonic_monkey.gd")
 const CREW_MONKEY := preload("res://scripts/crew_monkey.gd")
-const CREW_PRICES := {"zoro": 100, "sanji": 100, "chopper": 90, "gear5": 250}
+const CREW_PRICES := {"zoro": 100, "sanji": 100, "chopper": 90, "gear5": 250, "nami": 90, "usopp": 85, "robin": 110, "franky": 115, "brook": 95, "jinbe": 120}
+const FULL_CREW: Array[String] = ["nami", "usopp", "robin", "franky", "brook", "jinbe"]
 const LEGACY_VARIANTS: Array[String] = ["knuckles", "tails", "shadow", "super"]
 const DECOR_ICONS := {"meat": "🍖", "jolly_roger": "🏴‍☠", "gomu_fruit": "🍈", "chest": "📦"}
-const BUBBLES := {"monkey": "🍖!", "zoro": "⚔!", "sanji": "🔥!", "chopper": "🦌!", "gear5": "⚡!"}
+const BUBBLES := {"monkey": "🍖!", "zoro": "⚔!", "sanji": "🔥!", "chopper": "🦌!", "gear5": "⚡!", "nami": "🍊!", "usopp": "🎯!", "robin": "🌸!", "franky": "⭐!", "brook": "🎵!", "jinbe": "🌊!"}
 const FLAG_SEQUENCE := "🏴‍☠"
 
 var _failures := 0
@@ -75,6 +76,8 @@ func _test_catalog() -> void:
 func _test_font(main: Control) -> void:
 	for type: String in BUBBLES:
 		_check(main.EMOJI_FONT.has_char(BUBBLES[type].unicode_at(0)), "%s balonu gömülü fontta" % type)
+	for type: String in FULL_CREW:
+		_check(main.EMOJI_FONT.has_char(_dm.ISLAND_ITEMS[type].icon.unicode_at(0)), "%s simgesi gömülü fontta" % type)
 	# ZWJ dizisi tek bir bayrağa birleşmezse korsan bayrağı iki ayrı emoji olarak görünür.
 	var flag: float = main.EMOJI_FONT.get_string_size(FLAG_SEQUENCE, HORIZONTAL_ALIGNMENT_LEFT, -1, 48).x
 	var pirate_flag_parts: float = main.EMOJI_FONT.get_string_size("🏴☠", HORIZONTAL_ALIGNMENT_LEFT, -1, 48).x
@@ -140,6 +143,53 @@ func _test_crew(main: Control) -> void:
 	_check(_item_of_type(island, "gear5")._monkey._look.iris == Color("#dc2626"), "Gear 5 kırmızı gözler")
 	_check(_item_of_type(island, "gear5")._monkey._look.has("aura"), "Gear 5 aurası")
 	await _wait(0.5)
+	await _test_full_crew(island)
+
+
+func _test_full_crew(island: Control) -> void:
+	await _wait(CREW_MONKEY.MOVE_SECONDS)
+	for type: String in FULL_CREW:
+		var item := _item_of_type(island, type)
+		var monkey: Node2D = item._monkey
+		_check(is_zero_approx(monkey._move_pose()), "%s dinlenirken poz almaz" % type)
+
+		var before: Transform2D = monkey._body_transform()
+		await _wait(0.1)
+		_check(not monkey._body_transform().is_equal_approx(before), "%s nefes alır" % type)
+		monkey._next_blink = 0.01
+		monkey._process(0.02)
+		_check(monkey._next_blink >= monkey.BLINK_MIN_GAP, "%s göz kırpar" % type)
+
+		# Dokunuş: basıp hemen bırakmak özel hareketi başlatır.
+		var rest_arms: Array[Vector2] = monkey._arm_points()
+		var start: Vector2 = item.position
+		item._on_hit_area_gui_input(_item_press(true))
+		item._on_hit_area_gui_input(_item_press(false))
+		await _wait(CREW_MONKEY.MOVE_SECONDS * 0.4)
+		_check(is_equal_approx(monkey._move_pose(), 1.0), "%s özel hareketin tepesinde" % type)
+		_check(monkey._arm_points() != rest_arms, "%s kolları özel poza geçer" % type)
+		_check(item._bubble.get_child(1).text == BUBBLES[type], "%s dokunuş balonu" % type)
+		await _wait(CREW_MONKEY.MOVE_SECONDS * 0.7)
+		_check(is_zero_approx(monkey._move_pose()), "%s hareketi biter" % type)
+		_check(monkey._arm_points() == rest_arms, "%s kolları geri döner" % type)
+
+		# Sürükleme: bırakılan yer kayda geçer, dokunma hareketi başlamaz.
+		item._on_hit_area_gui_input(_item_press(true))
+		var motion := InputEventMouseMotion.new()
+		motion.position = Vector2(-20, 0)
+		item._on_hit_area_gui_input(motion)
+		_check(not item.position.is_equal_approx(start), "%s sürüklenir" % type)
+		item._on_hit_area_gui_input(_item_press(false))
+		await _wait(0.3)
+		var saved: Dictionary = _dm.data.island_items.filter(func(entry: Dictionary) -> bool: return entry.type == type)[0]
+		_check(Vector2(saved.x, saved.y).is_equal_approx(item.position), "%s yeni yeri kaydedilir" % type)
+
+
+func _item_press(pressed: bool) -> InputEventMouseButton:
+	var event := InputEventMouseButton.new()
+	event.button_index = MOUSE_BUTTON_LEFT
+	event.pressed = pressed
+	return event
 
 
 func _test_decor(main: Control) -> void:

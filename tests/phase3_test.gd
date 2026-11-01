@@ -126,7 +126,7 @@ func _test_shop(main: Control) -> void:
 	_check(modal.visible, "mağaza butonu açar")
 
 	_check(_dm.data.bananas == 50, "başlangıç 50 muz")
-	_check(modal._buy_buttons.size() == 18, "18 ürün")
+	_check(modal._buy_buttons.size() == 24, "24 ürün")
 	for type: String in ["palm", "campfire", "tent", "flower"]:
 		_check(not modal._buy_buttons[type].disabled, "%s alınabilir" % type)
 	for type: String in ["chest", "ship", "monkey", "monkey_knuckles", "monkey_tails", "monkey_shadow", "monkey_super"]:

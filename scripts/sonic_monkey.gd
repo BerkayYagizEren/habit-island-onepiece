@@ -202,7 +202,12 @@ func _draw_standing() -> void:
 	_draw_tail(PackedVector2Array([Vector2(-12, 16), Vector2(-34, 22), Vector2(-48, 8), Vector2(-42, -8), Vector2(-30, -6)]))
 	_draw_behind_body()
 	var kick := _front_foot_offset()
-	var stretch := _action if _look.get("rubber", false) else 0.0
+	var arms := _arm_points()
+	var back_elbow := arms[0]
+	var back_hand := arms[1]
+	var front_elbow := arms[2]
+	var front_hand := arms[3]
+	var arm_scale: float = _look.get("arm_scale", 1.0)
 	_draw_limb(Vector2(-9, 22), Vector2(-15, 44), 15.0, _look.fur_dark)
 	_draw_limb(Vector2(9, 22), Vector2(15, 44) + kick, 15.0, _look.fur)
 	_draw_sneaker(Vector2(-16, 47))
@@ -210,20 +215,16 @@ func _draw_standing() -> void:
 	if _look.has("waist"):
 		_draw_limb(Vector2(-9, 22), Vector2(-12, 33), 18.0, _look.waist)
 		_draw_limb(Vector2(9, 22), Vector2(9, 22).lerp(Vector2(15, 44) + kick, 0.5), 18.0, _look.waist)
-	var back_elbow := BACK_ELBOW.lerp(BACK_ELBOW_STRETCHED, stretch)
-	var back_hand := BACK_HAND.lerp(BACK_HAND_STRETCHED, stretch)
-	_draw_limb(Vector2(-25, -8), back_elbow, 15.0, _look.get("sleeve_dark", _look.fur_dark))
-	_draw_limb(back_elbow, back_hand, 13.0, _look.get("sleeve_dark", _look.fur_dark))
-	_shape(_ellipse(back_hand + Vector2(0, 2), Vector2(9, 9)), _look.get("hand", WHITE))
+	_draw_limb(Vector2(-25, -8), back_elbow, 15.0 * arm_scale, _look.get("sleeve_dark", _look.fur_dark))
+	_draw_limb(back_elbow, back_hand, 13.0 * arm_scale, _look.get("sleeve_dark", _look.fur_dark))
+	_shape(_ellipse(back_hand + Vector2(0, 2), Vector2(9, 9) * arm_scale), _look.get("hand", WHITE))
 	_draw_torso(PackedVector2Array([Vector2(-28, -18), Vector2(28, -18), Vector2(14, 26), Vector2(-14, 26)]), Vector2(0, -2))
 	# Kaldırılmış kol kasları gösterir.
-	var front_elbow := FRONT_ELBOW.lerp(FRONT_ELBOW_STRETCHED, stretch)
-	var front_hand := FRONT_HAND.lerp(FRONT_HAND_STRETCHED, stretch)
-	_draw_limb(Vector2(25, -8), front_elbow, 17.0, _look.get("sleeve", _look.fur))
-	_draw_limb(front_elbow, front_hand, 14.0, _look.get("sleeve", _look.fur))
-	_shape(_ellipse(Vector2(25, -8).lerp(front_elbow, 0.5), Vector2(11, 8)), _look.get("sleeve_dark", _look.fur_dark))
+	_draw_limb(Vector2(25, -8), front_elbow, 17.0 * arm_scale, _look.get("sleeve", _look.fur))
+	_draw_limb(front_elbow, front_hand, 14.0 * arm_scale, _look.get("sleeve", _look.fur))
+	_shape(_ellipse(Vector2(25, -8).lerp(front_elbow, 0.5), Vector2(11, 8) * arm_scale), _look.get("sleeve_dark", _look.fur_dark))
 	_draw_held_item(front_hand)
-	_shape(_ellipse(front_hand + Vector2(0, -2), Vector2(10, 10)), _look.get("hand", WHITE))
+	_shape(_ellipse(front_hand + Vector2(0, -2), Vector2(10, 10) * arm_scale), _look.get("hand", WHITE))
 	_draw_head(Vector2(0, -46), 0.0)
 	_draw_action_effects()
 
@@ -280,12 +281,16 @@ func _draw_outfit(corners: PackedVector2Array) -> void:
 func _draw_head(center: Vector2, tilt: float) -> void:
 	draw_set_transform_matrix(_body * Transform2D(tilt, center))
 	_draw_quills()
-	_shape(_ellipse(Vector2(-29, 2), Vector2(12, 12)), _look.fur)
-	_shape(_ellipse(Vector2(-29, 2), Vector2(6, 6)), SKIN)
+	var muzzle: Color = _look.get("muzzle", SKIN)
+	var has_ears: bool = _look.get("ears", true)
+	if has_ears:
+		_shape(_ellipse(Vector2(-29, 2), Vector2(12, 12)), _look.fur)
+		_shape(_ellipse(Vector2(-29, 2), Vector2(6, 6)), muzzle)
 	_shape(_ellipse(Vector2.ZERO, Vector2(30, 30)), _look.fur)
-	_shape(_ellipse(Vector2(29, 0), Vector2(9, 11)), _look.fur)
-	_shape(_ellipse(Vector2(29, 0), Vector2(4, 6)), SKIN)
-	_shape(_ellipse(Vector2(8, 12), Vector2(19, 14)), SKIN)
+	if has_ears:
+		_shape(_ellipse(Vector2(29, 0), Vector2(9, 11)), _look.fur)
+		_shape(_ellipse(Vector2(29, 0), Vector2(4, 6)), muzzle)
+	_shape(_ellipse(Vector2(8, 12), Vector2(19, 14)), muzzle)
 	_draw_eyes()
 	# Kararlı bakış: içe doğru inen kaşlar.
 	draw_line(Vector2(-9, -15), Vector2(9, -9), _look.brow, 4.0, true)
@@ -423,6 +428,15 @@ func _variant_table() -> Dictionary:
 
 func _front_foot_offset() -> Vector2:
 	return Vector2.ZERO
+
+
+# Sırasıyla arka dirsek, arka el, ön dirsek, ön el.
+func _arm_points() -> Array[Vector2]:
+	var stretch: float = _action if _look.get("rubber", false) else 0.0
+	return [
+		BACK_ELBOW.lerp(BACK_ELBOW_STRETCHED, stretch), BACK_HAND.lerp(BACK_HAND_STRETCHED, stretch),
+		FRONT_ELBOW.lerp(FRONT_ELBOW_STRETCHED, stretch), FRONT_HAND.lerp(FRONT_HAND_STRETCHED, stretch),
+	]
 
 
 func _draw_behind_body() -> void:
