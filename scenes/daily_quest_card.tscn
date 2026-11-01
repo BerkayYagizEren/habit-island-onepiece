@@ -1,0 +1,71 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/daily_quest_card.gd" id="1_script"]
+
+[node name="DailyQuestCard" type="PanelContainer"]
+theme_type_variation = &"PastelLemon"
+script = ExtResource("1_script")
+
+[node name="Column" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Heading" type="HBoxContainer" parent="Column"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Column/Heading"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"PriceLabel"
+theme_override_font_sizes/font_size = 24
+text = "Günün Korsan Görevi: Grand Line'da zafer kazan!"
+autowrap_mode = 3
+
+[node name="RewardLabel" type="Label" parent="Column/Heading"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"PriceLabel"
+theme_override_font_sizes/font_size = 24
+text = "+20 🍖"
+
+[node name="QuestLabel" type="Label" parent="Column"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+autowrap_mode = 3
+
+[node name="Actions" type="HBoxContainer" parent="Column"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="CountdownLabel" type="Label" parent="Column/Actions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "⏳ 0h 0m"
+
+[node name="ChangeButton" type="Button" parent="Column/Actions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_type_variation = &"SkyButton"
+theme_override_font_sizes/font_size = 22
+text = "Değiştir"
+
+[node name="CompleteButton" type="Button" parent="Column/Actions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_type_variation = &"GreenButton"
+theme_override_font_sizes/font_size = 22
+text = "Tamamla"
+
+[node name="CountdownTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+autostart = true

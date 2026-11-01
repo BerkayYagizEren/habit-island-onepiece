@@ -1,0 +1,57 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/island_view.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://scenes/shop_modal.tscn" id="2_shop_modal"]
+
+[node name="IslandView" type="Control"]
+clip_contents = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="World" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -360.0
+offset_top = -500.0
+offset_right = 360.0
+offset_bottom = 500.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Items" type="Node2D" parent="World"]
+unique_name_in_owner = true
+
+[node name="ShopButton" type="Button" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(240, 96)
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -260.0
+offset_top = -220.0
+offset_right = -20.0
+offset_bottom = -124.0
+grow_horizontal = 0
+grow_vertical = 0
+focus_mode = 0
+theme_type_variation = &"GoldButton"
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 32
+text = "🛍️ Mağaza"
+
+[node name="ShopModal" parent="." instance=ExtResource("2_shop_modal")]
+unique_name_in_owner = true

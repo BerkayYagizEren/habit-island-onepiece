@@ -1,0 +1,79 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/shop_modal.gd" id="1_script"]
+[ext_resource type="Theme" path="res://assets/theme/cartoon_theme.tres" id="2_theme"]
+
+[node name="ShopModal" type="CanvasLayer"]
+layer = 10
+visible = false
+script = ExtResource("1_script")
+
+[node name="Dim" type="ColorRect" parent="."]
+unique_name_in_owner = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+color = Color(0.05, 0.25, 0.4, 0.55)
+
+[node name="Center" type="CenterContainer" parent="Dim"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Panel" type="PanelContainer" parent="Dim/Center"]
+custom_minimum_size = Vector2(660, 1040)
+layout_mode = 2
+theme_type_variation = &"ShopBox"
+
+[node name="Column" type="VBoxContainer" parent="Dim/Center/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Header" type="HBoxContainer" parent="Dim/Center/Panel/Column"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="Dim/Center/Panel/Column/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"HeadingLabel"
+theme_override_font_sizes/font_size = 34
+text = "🛍️ Mağaza"
+
+[node name="BalanceChip" type="PanelContainer" parent="Dim/Center/Panel/Column/Header"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"BananaChip"
+
+[node name="BalanceLabel" type="Label" parent="Dim/Center/Panel/Column/Header/BalanceChip"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"BananaLabel"
+theme_override_font_sizes/font_size = 28
+text = "🍌 0"
+
+[node name="CloseButton" type="Button" parent="Dim/Center/Panel/Column/Header"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(68, 68)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"CloseButton"
+text = "✖"
+
+[node name="Scroll" type="ScrollContainer" parent="Dim/Center/Panel/Column"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="List" type="VBoxContainer" parent="Dim/Center/Panel/Column/Scroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12

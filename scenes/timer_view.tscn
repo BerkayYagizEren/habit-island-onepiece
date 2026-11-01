@@ -1,0 +1,172 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/timer_view.gd" id="1_script"]
+[ext_resource type="Script" path="res://scripts/focus_scene.gd" id="2_focus_scene"]
+[ext_resource type="Script" path="res://scripts/sonic_monkey.gd" id="3_sonic_monkey"]
+[ext_resource type="Script" path="res://scripts/doodle_button.gd" id="4_doodle_button"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_presets"]
+
+[node name="TimerView" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="FocusScene" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("2_focus_scene")
+
+[node name="SonicMonkey" type="Node2D" parent="FocusScene"]
+unique_name_in_owner = true
+script = ExtResource("3_sonic_monkey")
+pose = 1
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 112
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 120
+
+[node name="Column" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="Margin/Column"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 44
+text = "Focus With Luffy"
+horizontal_alignment = 1
+
+[node name="Stage" type="Control" parent="Margin/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="StatusLabel" type="Label" parent="Margin/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.99, 0.88, 0.55, 1)
+theme_override_colors/font_outline_color = Color(0.99, 0.88, 0.55, 1)
+theme_override_font_sizes/font_size = 28
+text = "Luffy is ready to train."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="TimeLabel" type="Label" parent="Margin/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 136
+text = "25:00"
+horizontal_alignment = 1
+
+[node name="Presets" type="HBoxContainer" parent="Margin/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Preset15Button" type="Button" parent="Margin/Column/Presets"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_type_variation = &"PresetSky"
+toggle_mode = true
+button_group = SubResource("ButtonGroup_presets")
+text = "15 dk"
+
+[node name="Preset25Button" type="Button" parent="Margin/Column/Presets"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_type_variation = &"PresetGreen"
+toggle_mode = true
+button_group = SubResource("ButtonGroup_presets")
+text = "25 dk"
+
+[node name="Preset45Button" type="Button" parent="Margin/Column/Presets"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_type_variation = &"PresetOrange"
+toggle_mode = true
+button_group = SubResource("ButtonGroup_presets")
+text = "45 dk"
+
+[node name="Preset60Button" type="Button" parent="Margin/Column/Presets"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_type_variation = &"PresetPink"
+toggle_mode = true
+button_group = SubResource("ButtonGroup_presets")
+text = "60 dk"
+
+[node name="StartButton" type="Button" parent="Margin/Column"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 104)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"GreenButton"
+theme_override_font_sizes/font_size = 44
+text = "BAŞLAT"
+
+[node name="StopButton" type="BaseButton" parent="Margin/Column"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(280, 112)
+layout_mode = 2
+focus_mode = 0
+script = ExtResource("4_doodle_button")
+caption = "STOP"
+font_size = 60
+
+[node name="FocusSoundButton" type="Button" parent="Margin/Column"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(72, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+focus_mode = 0
+theme_type_variation = &"RoundButton"
+theme_override_font_sizes/font_size = 30
+
+[node name="TickTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+
+[node name="CompletedDialog" type="AcceptDialog" parent="."]
+unique_name_in_owner = true
+title = "Odak Tamamlandı"
+theme_override_constants/buttons_min_width = 140
+theme_override_constants/buttons_min_height = 56
+ok_button_text = "Harika!"
+dialog_autowrap = true

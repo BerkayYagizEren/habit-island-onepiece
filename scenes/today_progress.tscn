@@ -1,0 +1,53 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/today_progress.gd" id="1_script"]
+[ext_resource type="Script" path="res://scripts/color_dot.gd" id="2_color_dot"]
+
+[node name="TodayProgress" type="PanelContainer"]
+theme_type_variation = &"HabitCard"
+script = ExtResource("1_script")
+
+[node name="Column" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Heading" type="Label" parent="Column"]
+layout_mode = 2
+theme_type_variation = &"HeadingLabel"
+theme_override_font_sizes/font_size = 24
+text = "Today's Progress"
+
+[node name="Stats" type="HBoxContainer" parent="Column"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Habits" type="HBoxContainer" parent="Column/Stats"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="Dot" type="Control" parent="Column/Stats/Habits"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+script = ExtResource("2_color_dot")
+radius = 10.0
+
+[node name="HabitsLabel" type="Label" parent="Column/Stats/Habits"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "0/0 habits"
+
+[node name="FocusLabel" type="Label" parent="Column/Stats"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 20
+text = "⏱ 0m focused"
+
+[node name="BananasLabel" type="Label" parent="Column/Stats"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 20
+text = "🍌 0 acquired"

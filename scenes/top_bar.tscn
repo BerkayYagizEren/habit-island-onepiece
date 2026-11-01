@@ -1,0 +1,64 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/top_bar.gd" id="1_script"]
+
+[node name="TopBar" type="PanelContainer"]
+theme_type_variation = &"FloatingPill"
+script = ExtResource("1_script")
+
+[node name="Content" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="BananaChip" type="PanelContainer" parent="Content"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"BananaChip"
+
+[node name="BananasLabel" type="Label" parent="Content/BananaChip"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"BananaLabel"
+theme_override_font_sizes/font_size = 28
+text = "🍌 0"
+
+[node name="XpChip" type="PanelContainer" parent="Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_type_variation = &"XpChip"
+
+[node name="XpRow" type="HBoxContainer" parent="Content/XpChip"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="LevelLabel" type="Label" parent="Content/XpChip/XpRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"LevelLabel"
+theme_override_font_sizes/font_size = 24
+text = "Lv. 1"
+
+[node name="XpBar" type="ProgressBar" parent="Content/XpChip/XpRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 20)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+step = 1.0
+show_percentage = false
+
+[node name="XpLabel" type="Label" parent="Content/XpChip/XpRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"LevelLabel"
+theme_override_font_sizes/font_size = 18
+text = "0/100 XP"
+
+[node name="SoundButton" type="Button" parent="Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 2
+size_flags_vertical = 4
+focus_mode = 0
+theme_type_variation = &"RoundButton"

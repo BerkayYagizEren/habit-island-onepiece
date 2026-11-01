@@ -1,0 +1,86 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://scenes/top_bar.tscn" id="2_top_bar"]
+[ext_resource type="PackedScene" path="res://scenes/bottom_nav.tscn" id="3_bottom_nav"]
+[ext_resource type="PackedScene" path="res://scenes/habits_view.tscn" id="4_habits_view"]
+[ext_resource type="PackedScene" path="res://scenes/timer_view.tscn" id="5_timer_view"]
+[ext_resource type="PackedScene" path="res://scenes/island_view.tscn" id="6_island_view"]
+[ext_resource type="PackedScene" path="res://scenes/stats_view.tscn" id="7_stats_view"]
+[ext_resource type="Theme" path="res://assets/theme/cartoon_theme.tres" id="8_theme"]
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("8_theme")
+script = ExtResource("1_script")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.84705883, 0.9411765, 0.98039216, 1)
+
+[node name="Content" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="IslandView" parent="Content" instance=ExtResource("6_island_view")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+
+[node name="HabitsView" parent="Content" instance=ExtResource("4_habits_view")]
+unique_name_in_owner = true
+layout_mode = 1
+
+[node name="TimerView" parent="Content" instance=ExtResource("5_timer_view")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+
+[node name="StatsView" parent="Content" instance=ExtResource("7_stats_view")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+
+[node name="TopDock" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 14
+
+[node name="TopBar" parent="TopDock" instance=ExtResource("2_top_bar")]
+layout_mode = 2
+
+[node name="BottomDock" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 16
+
+[node name="BottomNav" parent="BottomDock" instance=ExtResource("3_bottom_nav")]
+unique_name_in_owner = true
+layout_mode = 2

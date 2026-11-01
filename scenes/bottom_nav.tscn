@@ -1,0 +1,61 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/bottom_nav.gd" id="1_script"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_tabs"]
+
+[node name="BottomNav" type="PanelContainer"]
+theme_type_variation = &"FloatingPill"
+script = ExtResource("1_script")
+
+[node name="Tabs" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="IslandButton" type="Button" parent="Tabs"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 68)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_type_variation = &"TabSky"
+theme_override_font_sizes/font_size = 19
+toggle_mode = true
+button_group = SubResource("ButtonGroup_tabs")
+text = "🏝️ Ada"
+
+[node name="HabitsButton" type="Button" parent="Tabs"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 68)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_type_variation = &"TabGreen"
+theme_override_font_sizes/font_size = 19
+toggle_mode = true
+button_group = SubResource("ButtonGroup_tabs")
+text = "✅ Alışkanlıklar"
+
+[node name="TimerButton" type="Button" parent="Tabs"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 68)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_type_variation = &"TabOrange"
+theme_override_font_sizes/font_size = 19
+toggle_mode = true
+button_group = SubResource("ButtonGroup_tabs")
+text = "⏱️ Odak"
+
+[node name="StatsButton" type="Button" parent="Tabs"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 68)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_type_variation = &"TabPurple"
+theme_override_font_sizes/font_size = 19
+toggle_mode = true
+button_group = SubResource("ButtonGroup_tabs")
+text = "📊 İstatistik"
