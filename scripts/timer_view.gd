@@ -48,6 +48,10 @@ func _ready() -> void:
 	_update_display()
 
 
+func _exit_tree() -> void:
+	DisplayServer.screen_set_keep_on(false)
+
+
 func _select_minutes(minutes: int) -> void:
 	_selected_minutes = minutes
 	_reset()
@@ -56,11 +60,13 @@ func _select_minutes(minutes: int) -> void:
 func _start() -> void:
 	_end_unix_time = Time.get_unix_time_from_system() + _remaining_seconds
 	_tick_timer.start()
+	DisplayServer.screen_set_keep_on(true)
 	_update_display()
 
 
 func _reset() -> void:
 	_tick_timer.stop()
+	DisplayServer.screen_set_keep_on(false)
 	_remaining_seconds = _selected_minutes * SECONDS_PER_MINUTE
 	_update_display()
 
